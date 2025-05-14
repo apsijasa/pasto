@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // === QUOTE CALCULATOR FUNCTIONALITY ===
     initQuoteCalculator();
+    
+    // === LAZY LOADING PARA IMÁGENES ===
+    initLazyLoading();
 });
 
 /**
@@ -21,6 +24,9 @@ function initCarousel() {
     const dots = document.querySelectorAll('.carousel-dot');
     const prevBtn = document.querySelector('.carousel-arrow.prev');
     const nextBtn = document.querySelector('.carousel-arrow.next');
+    
+    // Si no se encuentra el carousel, salir de la función
+    if (!carousel || !slides.length) return;
     
     // Variables para el funcionamiento del carousel
     let currentIndex = 0;
@@ -46,6 +52,14 @@ function initCarousel() {
         dots.forEach((dot, i) => {
             dot.classList.toggle('active', i === currentIndex);
         });
+        
+        // Precargar la imagen del siguiente slide (para mejorar rendimiento)
+        const nextIndex = (currentIndex + 1) % slides.length;
+        const nextSlideImg = slides[nextIndex].querySelector('img');
+        if (nextSlideImg && nextSlideImg.getAttribute('data-src')) {
+            nextSlideImg.src = nextSlideImg.getAttribute('data-src');
+            nextSlideImg.removeAttribute('data-src');
+        }
     }
     
     // Configurar listeners para las flechas de navegación
@@ -84,8 +98,17 @@ function initCarousel() {
         startAutoSlide();
     }
     
-    // Iniciar el auto-slide
-    startAutoSlide();
+    // Asegurarse de que la primera imagen esté cargada
+    const firstSlideImg = slides[0].querySelector('img');
+    if (firstSlideImg && !firstSlideImg.complete) {
+        firstSlideImg.onload = () => {
+            // Iniciar el auto-slide una vez que la primera imagen esté cargada
+            startAutoSlide();
+        };
+    } else {
+        // Si la imagen ya está cargada o no hay imagen, iniciar el auto-slide
+        startAutoSlide();
+    }
 }
 
 /**
@@ -139,7 +162,47 @@ function initQuoteCalculator() {
         document.getElementById('result-installation-cost').textContent = installationCost.toLocaleString();
         document.getElementById('result-total').textContent = totalCost.toLocaleString();
         
-        // Mostrar el contenedor de resultados
+        // Mostrar el contenedor de resultados con animación
         resultContainer.classList.add('active');
+        resultContainer.style.animation = 'fadeIn 0.5s ease-in-out';
     });
+}
+
+/**
+ * Inicializa la carga diferida de imágenes (lazy loading)
+ * para mejorar el rendimiento del sitio
+ */
+function initLazyLoading() {
+    // Verificar si el navegador soporta IntersectionObserver
+    if ('IntersectionObserver' in window) {
+        const imgObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    
+                    // Si la imagen tiene el atributo data-src, cargamos la imagen
+                    if (img.getAttribute('data-src')) {
+                        img.src = img.getAttribute('data-src');
+                        img.removeAttribute('data-src');
+                    }
+                    
+                    // Dejar de observar la imagen una vez cargada
+                    observer.unobserve(img);
+                }
+            });
+        });
+        
+        // Observar todas las imágenes que tengan el atributo data-src
+        const lazyImages = document.querySelectorAll('img[data-src]');
+        lazyImages.forEach(img => {
+            imgObserver.observe(img);
+        });
+    } else {
+        // Fallback para navegadores que no soportan IntersectionObserver
+        const lazyImages = document.querySelectorAll('img[data-src]');
+        lazyImages.forEach(img => {
+            img.src = img.getAttribute('data-src');
+            img.removeAttribute('data-src');
+        });
+    }
 }

@@ -110,7 +110,6 @@ header {
     position: relative;
     height: 100%;
     overflow: hidden;
-    background: none; /* Se remueve el background CSS */
 }
 
 .carousel-slide img {
@@ -123,9 +122,20 @@ header {
     z-index: 0;
 }
 
+.carousel-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Overlay oscuro para mejorar legibilidad del texto */
+    z-index: 1;
+}
+
 .carousel-content {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -133,6 +143,7 @@ header {
     color: white;
     width: 80%;
     max-width: 800px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Sombra para mejorar legibilidad */
 }
 
 .carousel-content h1 {
@@ -153,6 +164,7 @@ header {
     justify-content: space-between;
     padding: 0 20px;
     transform: translateY(-50%);
+    z-index: 3;
 }
 
 .carousel-arrow {
@@ -179,6 +191,7 @@ header {
     left: 50%;
     transform: translateX(-50%);
     display: flex;
+    z-index: 3;
 }
 
 .carousel-dot {
@@ -238,6 +251,9 @@ header {
     overflow: hidden;
     box-shadow: var(--shadow);
     transition: transform 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .product-card:hover {
@@ -246,12 +262,25 @@ header {
 
 .product-image {
     height: 200px;
-    background-size: cover;
-    background-position: center;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.05);
 }
 
 .product-info {
     padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .product-info h3 {
@@ -262,6 +291,11 @@ header {
 .product-info p {
     color: #666;
     margin-bottom: 1rem;
+}
+
+.product-info .btn {
+    margin-top: auto;
+    align-self: flex-start;
 }
 
 /*==================== Proyectos ====================*/
@@ -277,17 +311,23 @@ header {
     border-radius: 8px;
     overflow: hidden;
     cursor: pointer;
+    box-shadow: var(--shadow);
 }
 
 .project-image {
     width: 100%;
     height: 100%;
-    background-size: cover;
-    background-position: center;
+    overflow: hidden;
+}
+
+.project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     transition: transform 0.5s ease;
 }
 
-.project-card:hover .project-image {
+.project-card:hover .project-image img {
     transform: scale(1.1);
 }
 
@@ -323,10 +363,20 @@ header {
     flex: 1;
     min-width: 300px;
     height: 400px;
-    background-size: cover;
-    background-position: center;
     border-radius: 8px;
-    background-image: url('img/about.jpg');
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.about-image:hover img {
+    transform: scale(1.05);
 }
 
 .about-content {
@@ -337,6 +387,7 @@ header {
 .about-content h3 {
     margin-bottom: 1rem;
     color: var(--text-color);
+    font-size: 1.8rem;
 }
 
 .about-content p {
@@ -390,21 +441,273 @@ header {
     display: block;
 }
 
+.note {
+    margin-top: 1rem;
+    font-style: italic;
+}
+
+/*==================== Footer ====================*/
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 3rem 0 0;
+}
+
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 2rem;
+}
+
+.footer-section h3 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+}
+
+.social-links {
+    display: flex;
+    margin-top: 1rem;
+}
+
+.social-links a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    margin-right: 10px;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-3px);
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: var(--primary-color);
+}
+
+.contact-info p {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.contact-info i {
+    margin-right: 10px;
+    color: var(--primary-color);
+    width: 20px;
+}
+
+.copyright {
+    background-color: #222;
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 2rem;
+}
+
+/* WhatsApp Button */
+.whatsapp-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: #25d366;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-btn:hover {
+    background-color: #128c7e;
+    transform: scale(1.1);
+}
+
 /*==================== Media Queries ====================*/
 @media (max-width: 768px) {
     .navbar {
         flex-direction: column;
+        padding: 1rem;
     }
+
+    .logo {
+        margin-bottom: 1rem;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .nav-links li {
+        margin: 0.5rem;
+    }
+
     .carousel-container {
         height: 300px;
+        margin-top: 120px;
     }
+
     .carousel-content h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
+
     .carousel-content p {
         font-size: 1rem;
     }
+
     .section {
         padding: 3rem 1rem;
+    }
+
+    .products-grid,
+    .projects-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .about-container {
+        flex-direction: column;
+    }
+
+    .about-image {
+        width: 100%;
+        height: 300px;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        padding: 0 2rem;
+    }
+
+    .footer-section {
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-container {
+        height: 250px;
+        margin-top: 140px;
+    }
+
+    .carousel-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .carousel-content p {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .carousel-content .btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
+    .product-card,
+    .project-card {
+        min-height: auto;
+    }
+
+    .product-image {
+        height: 180px;
+    }
+
+    .project-card {
+        height: 200px;
+    }
+
+    .about-image {
+        height: 250px;
+    }
+
+    .quote-form {
+        grid-template-columns: 1fr;
+    }
+
+    .whatsapp-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+
+/* Asegurar la carga correcta de imágenes */
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* Animaciones y transiciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.carousel-slide {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Mejoras de accesibilidad */
+input:focus, 
+select:focus,
+button:focus,
+a:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Mejoras de usabilidad para hover en dispositivos táctiles */
+@media (hover: hover) {
+    .project-card:hover .project-overlay {
+        opacity: 1;
+    }
+}
+
+@media (hover: none) {
+    .project-overlay {
+        opacity: 0.8;
     }
 }

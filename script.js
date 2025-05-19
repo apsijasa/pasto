@@ -1,4 +1,4 @@
-/**
+**
  * Sitio Web Pasto Sintético - Funcionalidades JavaScript
  * Este archivo contiene todas las funcionalidades interactivas del sitio web
  */
@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // === QUOTE CALCULATOR FUNCTIONALITY ===
     initQuoteCalculator();
+    
+    // === FORM SUBMISSION HANDLING ===
+    initFormSubmission();
     
     // === LAZY LOADING PARA IMÁGENES ===
     initLazyLoading();
@@ -165,7 +168,206 @@ function initQuoteCalculator() {
         // Mostrar el contenedor de resultados con animación
         resultContainer.classList.add('active');
         resultContainer.style.animation = 'fadeIn 0.5s ease-in-out';
+        
+        // Hacer scroll hasta el contenedor de resultados
+        resultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
+}
+
+/**
+ * Inicializa la funcionalidad de envío del formulario
+ * con integración a webhook
+ */
+function initFormSubmission() {
+    const quoteForm = document.getElementById('quoteForm');
+    
+    // Si no existe el formulario, salir
+    if (!quoteForm) return;
+    
+    // Añadir validación al formulario
+    quoteForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        // Validar el formulario antes de enviar
+        if (validateForm()) {
+            // Recopilar los datos del formulario
+            const formData = {
+                fullname: document.getElementById('fullname').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                contactPreference: document.getElementById('contact-preference').value,
+                grassType: document.getElementById('grass-type').value,
+                grassTypeName: document.getElementById('grass-type').options[document.getElementById('grass-type').selectedIndex].text,
+                squareMeters: document.getElementById('square-meters').value,
+                comments: document.getElementById('comments').value,
+                estimatedTotal: document.getElementById('result-total').textContent || 'No calculado'
+            };
+            
+            // Aquí iría la integración con el webhook
+            sendToWebhook(formData);
+        }
+    });
+    
+    /**
+     * Valida todos los campos del formulario
+     * @returns {boolean} - True si el formulario es válido, false en caso contrario
+     */
+    function validateForm() {
+        let isValid = true;
+        const requiredFields = [
+            'fullname', 
+            'email', 
+            'phone', 
+            'contact-preference',
+            'grass-type',
+            'square-meters'
+        ];
+        
+        // Restablecer mensajes de error
+        document.querySelectorAll('.error-message').forEach(msg => {
+            msg.style.display = 'none';
+        });
+        
+        document.querySelectorAll('.error').forEach(field => {
+            field.classList.remove('error');
+        });
+        
+        // Validar campos requeridos
+        requiredFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (!field.value.trim()) {
+                isValid = false;
+                field.classList.add('error');
+                
+                // Mostrar mensaje de error si existe
+                const errorMsg = field.nextElementSibling;
+                if (errorMsg && errorMsg.classList.contains('error-message')) {
+                    errorMsg.style.display = 'block';
+                }
+            }
+        });
+        
+        // Validar formato de email
+        const emailField = document.getElementById('email');
+        if (emailField.value && !isValidEmail(emailField.value)) {
+            isValid = false;
+            emailField.classList.add('error');
+            
+            // Mostrar mensaje de error específico para email inválido
+            const errorMsg = emailField.nextElementSibling;
+            if (errorMsg && errorMsg.classList.contains('error-message')) {
+                errorMsg.textContent = 'Por favor, ingrese un correo electrónico válido.';
+                errorMsg.style.display = 'block';
+            }
+        }
+        
+        return isValid;
+    }
+    
+    /**
+     * Valida el formato de un email
+     * @param {string} email - Email a validar
+     * @returns {boolean} - True si el email es válido, false en caso contrario
+     */
+    function isValidEmail(email) {
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
+    
+    /**
+     * Envía los datos del formulario al webhook
+     * @param {Object} data - Datos a enviar al webhook
+     */
+    function sendToWebhook(data) {
+        // URL del webhook (a reemplazar con la URL real)
+        const webhookUrl = 'https://tu-webhook-url.com/endpoint';
+        
+        // Mostrar indicador de carga
+        const submitButton = document.getElementById('submit-quote');
+        const originalButtonText = submitButton.textContent;
+        submitButton.disabled = true;
+        submitButton.textContent = 'Enviando...';
+        
+        // Simular envío con setTimeout (reemplazar con fetch real)
+        setTimeout(() => {
+            // Este código simula una respuesta exitosa
+            // En producción, reemplazar con fetch real al webhook
+            
+            /*
+            // Código de ejemplo para envío real con fetch:
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+                return response.json();
+            })
+            .then(responseData => {
+                showSuccessMessage();
+                resetForm();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Hubo un error al enviar el formulario. Por favor, inténtelo nuevamente.');
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
+            });
+            */
+            
+            // Código simulado: Mostrar éxito y resetear formulario
+            showSuccessMessage();
+            resetForm();
+            
+            // Restaurar botón
+            submitButton.disabled = false;
+            submitButton.textContent = originalButtonText;
+        }, 1500);
+    }
+    
+    /**
+     * Muestra un mensaje de éxito después de enviar el formulario
+     */
+    function showSuccessMessage() {
+        let successMsg = document.querySelector('.success-message');
+        
+        // Si no existe el mensaje de éxito, crearlo
+        if (!successMsg) {
+            successMsg = document.createElement('div');
+            successMsg.className = 'success-message';
+            successMsg.innerHTML = '<p><strong>¡Solicitud enviada correctamente!</strong></p>' +
+                                 '<p>Gracias por su interés. Nos pondremos en contacto a la brevedad.</p>';
+            
+            // Insertar después del formulario
+            quoteForm.parentNode.insertBefore(successMsg, quoteForm.nextSibling);
+        }
+        
+        // Mostrar mensaje
+        successMsg.classList.add('active');
+        
+        // Hacer scroll hasta el mensaje
+        successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    
+    /**
+     * Resetea el formulario a su estado inicial
+     */
+    function resetForm() {
+        quoteForm.reset();
+        
+        // Ocultar los resultados del cálculo
+        const resultContainer = document.getElementById('quote-result');
+        if (resultContainer) {
+            resultContainer.classList.remove('active');
+        }
+    }
 }
 
 /**

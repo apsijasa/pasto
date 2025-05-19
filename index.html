@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <header>
         <nav class="navbar">
@@ -28,7 +30,7 @@
     <section class="carousel-container" id="inicio">
         <div class="carousel">
             <div class="carousel-slide">
-                <img src="img/carousel/carousel-padel.jpg" alt="Pasto sintético para canchas de pádel">
+                <img src="assets/image/baby.jpg" alt="Pasto sintético para canchas de pádel">
                 <div class="carousel-content">
                     <h1>Transforma tu espacio con el mejor pasto sintético</h1>
                     <p>Soluciones de césped artificial de alta calidad para jardines, terrazas y áreas deportivas</p>
@@ -36,7 +38,7 @@
                 </div>
             </div>
             <div class="carousel-slide">
-                <img src="img/carousel/carousel-infantil.jpg" alt="Pasto sintético para áreas infantiles">
+                <img src="assets/image/futbol.jpg" alt="Pasto sintético para áreas infantiles">
                 <div class="carousel-content">
                     <h1>Ahorra agua y tiempo de mantenimiento</h1>
                     <p>Una solución ecológica y práctica que mantiene su belleza durante años</p>
@@ -44,7 +46,7 @@
                 </div>
             </div>
             <div class="carousel-slide">
-                <img src="img/carousel/carousel-golf.jpg" alt="Pasto sintético para campos de golf">
+                <img src="assets/image/padel.jpg" alt="Pasto sintético para campos de golf">
                 <div class="carousel-content">
                     <h1>Instalación profesional garantizada</h1>
                     <p>Contamos con técnicos especializados y los mejores materiales del mercado</p>
@@ -78,7 +80,8 @@
                 </div>
                 <div class="product-info">
                     <h3>Garden Classic</h3>
-                    <p>Pasto sintético de 35mm ideal para jardines residenciales. Suave al tacto y de aspecto natural.</p>
+                    <p>Pasto sintético de 35mm ideal para jardines residenciales. Suave al tacto y de aspecto natural.
+                    </p>
                     <p><strong>$590 por m²</strong></p>
                     <a href="#cotizador" class="btn">Cotizar</a>
                 </div>
@@ -100,7 +103,8 @@
                 </div>
                 <div class="product-info">
                     <h3>Premium Royal</h3>
-                    <p>Nuestro modelo premium de 50mm. Máximo realismo con mezcla de tonos y fibras de alta densidad.</p>
+                    <p>Nuestro modelo premium de 50mm. Máximo realismo con mezcla de tonos y fibras de alta densidad.
+                    </p>
                     <p><strong>$890 por m²</strong></p>
                     <a href="#cotizador" class="btn">Cotizar</a>
                 </div>
@@ -191,9 +195,14 @@
             </div>
             <div class="about-content">
                 <h3>Tu mejor opción en pasto sintético</h3>
-                <p>Somos una empresa especializada en la venta e instalación de césped artificial de alta calidad. Con más de 10 años de experiencia en el mercado, nos hemos consolidado como líderes del sector gracias a nuestro compromiso con la calidad y la satisfacción del cliente.</p>
-                <p>Contamos con un equipo de profesionales altamente capacitados que garantizan instalaciones perfectas y duraderas. Todos nuestros productos cumplen con los más altos estándares de calidad y son amigables con el medio ambiente.</p>
-                <p>Nuestra misión es transformar espacios con soluciones prácticas, estéticas y sostenibles que mejoren la calidad de vida de nuestros clientes.</p>
+                <p>Somos una empresa especializada en la venta e instalación de césped artificial de alta calidad. Con
+                    más de 10 años de experiencia en el mercado, nos hemos consolidado como líderes del sector gracias a
+                    nuestro compromiso con la calidad y la satisfacción del cliente.</p>
+                <p>Contamos con un equipo de profesionales altamente capacitados que garantizan instalaciones perfectas
+                    y duraderas. Todos nuestros productos cumplen con los más altos estándares de calidad y son
+                    amigables con el medio ambiente.</p>
+                <p>Nuestra misión es transformar espacios con soluciones prácticas, estéticas y sostenibles que mejoren
+                    la calidad de vida de nuestros clientes.</p>
                 <a href="#contacto" class="btn">Contáctanos</a>
             </div>
         </div>
@@ -204,11 +213,35 @@
             <h2>Cotizador</h2>
         </div>
         <div class="quote-container">
-            <p>Complete los siguientes datos para obtener un presupuesto estimado:</p>
-            <div class="quote-form">
+            <p>Complete los siguientes datos para obtener un presupuesto personalizado:</p>
+            <form id="quoteForm" class="quote-form">
+                <!-- Información personal -->
+                <div class="form-group">
+                    <label for="fullname">Nombre completo:</label>
+                    <input type="text" id="fullname" name="fullname" placeholder="Ingrese su nombre completo" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Correo electrónico:</label>
+                    <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Número de celular:</label>
+                    <input type="tel" id="phone" name="phone" placeholder="+56 9 xxxx xxxx" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-preference">Preferencia de contacto:</label>
+                    <select id="contact-preference" name="contact-preference" required>
+                        <option value="">Seleccione una opción</option>
+                        <option value="email">Correo electrónico</option>
+                        <option value="phone">Celular</option>
+                        <option value="whatsapp">WhatsApp</option>
+                    </select>
+                </div>
+
+                <!-- Detalles del producto -->
                 <div class="form-group">
                     <label for="grass-type">Tipo de Pasto:</label>
-                    <select id="grass-type">
+                    <select id="grass-type" name="grass-type" required>
                         <option value="">Seleccione un tipo</option>
                         <option value="590">Garden Classic ($590/m²)</option>
                         <option value="750">Sport Pro ($750/m²)</option>
@@ -218,13 +251,19 @@
                 </div>
                 <div class="form-group">
                     <label for="square-meters">Metros Cuadrados:</label>
-                    <input type="number" id="square-meters" min="1" placeholder="Ingrese los m²">
+                    <input type="number" id="square-meters" name="square-meters" min="1" placeholder="Ingrese los m²"
+                        required>
                 </div>
                 <div class="form-group">
-                    <label>&nbsp;</label>
-                    <button class="btn" id="calculate-btn">Calcular Presupuesto</button>
+                    <label for="comments">Comentarios adicionales:</label>
+                    <textarea id="comments" name="comments"
+                        placeholder="Cuéntenos más sobre su proyecto (opcional)"></textarea>
                 </div>
-            </div>
+                <div class="form-group form-actions">
+                    <button type="button" class="btn" id="calculate-btn">Calcular Presupuesto</button>
+                    <button type="submit" class="btn btn-submit" id="submit-quote">Enviar Solicitud</button>
+                </div>
+            </form>
             <div class="result-container" id="quote-result">
                 <h3>Presupuesto Estimado</h3>
                 <p>Tipo de pasto: <span id="result-type">-</span></p>
@@ -232,8 +271,8 @@
                 <p>Costo del material: $<span id="result-material-cost">-</span></p>
                 <p>Costo de instalación (20%): $<span id="result-installation-cost">-</span></p>
                 <p><strong>Total estimado: $<span id="result-total">-</span></strong></p>
-                <p class="note"><small>* Este presupuesto es referencial. Para un valor exacto es necesario realizar una visita técnica.</small></p>
-                <a href="#contacto" class="btn">Solicitar Visita Técnica</a>
+                <p class="note"><small>* Este presupuesto es referencial. Para un valor exacto es necesario realizar una
+                        visita técnica.</small></p>
             </div>
         </div>
     </section>
@@ -273,10 +312,15 @@
         </div>
     </footer>
 
-    <a href="https://wa.me/1234567890?text=Hola,%20estoy%20interesado%20en%20sus%20servicios%20de%20pasto%20sintético" class="whatsapp-btn" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-    </a>
+    <div class="whatsapp-floating">
+        <a href="https://wa.me/1234567890?text=Hola,%20estoy%20interesado%20en%20sus%20servicios%20de%20pasto%20sintético"
+            class="whatsapp-btn" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+            <span class="whatsapp-tooltip">¡Escríbenos por WhatsApp!</span>
+        </a>
+    </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>

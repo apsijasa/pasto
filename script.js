@@ -1,4 +1,4 @@
-**
+/**
  * Sitio Web Pasto Sintético - Funcionalidades JavaScript
  * Este archivo contiene todas las funcionalidades interactivas del sitio web
  */
@@ -101,6 +101,9 @@ function initCarousel() {
         startAutoSlide();
     }
     
+    // Iniciar el carousel mostrando el primer slide
+    showSlide(0);
+    
     // Asegurarse de que la primera imagen esté cargada
     const firstSlideImg = slides[0].querySelector('img');
     if (firstSlideImg && !firstSlideImg.complete) {
@@ -159,11 +162,18 @@ function initQuoteCalculator() {
         const totalCost = materialCost + installationCost;
         
         // Actualizar el contenido de los resultados
-        document.getElementById('result-type').textContent = grassTypeName;
-        document.getElementById('result-area').textContent = squareMeters;
-        document.getElementById('result-material-cost').textContent = materialCost.toLocaleString();
-        document.getElementById('result-installation-cost').textContent = installationCost.toLocaleString();
-        document.getElementById('result-total').textContent = totalCost.toLocaleString();
+        const resultType = document.getElementById('result-type');
+        const resultArea = document.getElementById('result-area');
+        const resultMaterialCost = document.getElementById('result-material-cost');
+        const resultInstallationCost = document.getElementById('result-installation-cost');
+        const resultTotal = document.getElementById('result-total');
+        
+        // Verificar que los elementos existan antes de actualizar
+        if (resultType) resultType.textContent = grassTypeName;
+        if (resultArea) resultArea.textContent = squareMeters;
+        if (resultMaterialCost) resultMaterialCost.textContent = materialCost.toLocaleString();
+        if (resultInstallationCost) resultInstallationCost.textContent = installationCost.toLocaleString();
+        if (resultTotal) resultTotal.textContent = totalCost.toLocaleString();
         
         // Mostrar el contenedor de resultados con animación
         resultContainer.classList.add('active');
@@ -191,16 +201,26 @@ function initFormSubmission() {
         // Validar el formulario antes de enviar
         if (validateForm()) {
             // Recopilar los datos del formulario
+            const grassTypeSelect = document.getElementById('grass-type');
+            // Verificar que el elemento existe y está seleccionado
+            let grassTypeName = 'No seleccionado';
+            if (grassTypeSelect && grassTypeSelect.selectedIndex > 0) {
+                grassTypeName = grassTypeSelect.options[grassTypeSelect.selectedIndex].text;
+            }
+            
+            const resultTotal = document.getElementById('result-total');
+            const estimatedTotal = resultTotal ? resultTotal.textContent : 'No calculado';
+            
             const formData = {
                 fullname: document.getElementById('fullname').value,
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
                 contactPreference: document.getElementById('contact-preference').value,
-                grassType: document.getElementById('grass-type').value,
-                grassTypeName: document.getElementById('grass-type').options[document.getElementById('grass-type').selectedIndex].text,
+                grassType: grassTypeSelect ? grassTypeSelect.value : '',
+                grassTypeName: grassTypeName,
                 squareMeters: document.getElementById('square-meters').value,
                 comments: document.getElementById('comments').value,
-                estimatedTotal: document.getElementById('result-total').textContent || 'No calculado'
+                estimatedTotal: estimatedTotal
             };
             
             // Aquí iría la integración con el webhook
@@ -224,18 +244,24 @@ function initFormSubmission() {
         ];
         
         // Restablecer mensajes de error
-        document.querySelectorAll('.error-message').forEach(msg => {
-            msg.style.display = 'none';
-        });
+        const errorMessages = document.querySelectorAll('.error-message');
+        if (errorMessages) {
+            errorMessages.forEach(msg => {
+                msg.style.display = 'none';
+            });
+        }
         
-        document.querySelectorAll('.error').forEach(field => {
-            field.classList.remove('error');
-        });
+        const errorFields = document.querySelectorAll('.error');
+        if (errorFields) {
+            errorFields.forEach(field => {
+                field.classList.remove('error');
+            });
+        }
         
         // Validar campos requeridos
         requiredFields.forEach(fieldId => {
             const field = document.getElementById(fieldId);
-            if (!field.value.trim()) {
+            if (field && !field.value.trim()) {
                 isValid = false;
                 field.classList.add('error');
                 
@@ -249,7 +275,7 @@ function initFormSubmission() {
         
         // Validar formato de email
         const emailField = document.getElementById('email');
-        if (emailField.value && !isValidEmail(emailField.value)) {
+        if (emailField && emailField.value && !isValidEmail(emailField.value)) {
             isValid = false;
             emailField.classList.add('error');
             
@@ -284,6 +310,8 @@ function initFormSubmission() {
         
         // Mostrar indicador de carga
         const submitButton = document.getElementById('submit-quote');
+        if (!submitButton) return;
+        
         const originalButtonText = submitButton.textContent;
         submitButton.disabled = true;
         submitButton.textContent = 'Enviando...';
@@ -346,7 +374,9 @@ function initFormSubmission() {
                                  '<p>Gracias por su interés. Nos pondremos en contacto a la brevedad.</p>';
             
             // Insertar después del formulario
-            quoteForm.parentNode.insertBefore(successMsg, quoteForm.nextSibling);
+            if (quoteForm && quoteForm.parentNode) {
+                quoteForm.parentNode.insertBefore(successMsg, quoteForm.nextSibling);
+            }
         }
         
         // Mostrar mensaje
@@ -360,6 +390,8 @@ function initFormSubmission() {
      * Resetea el formulario a su estado inicial
      */
     function resetForm() {
+        if (!quoteForm) return;
+        
         quoteForm.reset();
         
         // Ocultar los resultados del cálculo
